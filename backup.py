@@ -15,6 +15,7 @@ import datetime
 import getpass
 import httplib
 import json
+import os
 import sqlite3
 import sys
 import urllib
@@ -50,6 +51,9 @@ class FilenameRequired(Exception):
     pass
 
 class NoDataError(Exception):
+    pass
+
+class DirectoryRequired(Exception):
     pass
 
 
@@ -110,7 +114,7 @@ class CatchBackup(object):
 
         return notes
 
-    def dump_notes(self, filename=None):
+    def dump_raw_notes(self, filename=None):
         if not filename:
             raise FilenameRequired()
 
@@ -121,14 +125,46 @@ class CatchBackup(object):
         f.write(self.raw_data)
         f.close()
 
+    def dump_cooked_notes(self, directory=None):
+        if not directory:
+            raise DirectoryRequired()
+        try:
+            os.makedirs(directory)
+        except error:
+            pass
+
+        if not self.cooked_data:
+            raise NoDataError()
+
+        for note in self.cooked_data:
+            pass
+
+    def dump_media(self, directory=None):
+        if not directory:
+            raise DirectoryRequired()
+        try:
+            os.makedirs(directory)
+        except error:
+            pass
+
+        if not self.cooked_data:
+            raise NoDataError()
+
+        for not in self.cooked_data:
+            pass
+
+
 def main():
     parser = argparse.ArgumentParser(description='Backup data from Catch API')
     parser.add_argument('-f', '--file', dest='outfile',
             help='JSON data file to write (default: notes.json)',
             default="notes.json")
 
-    parser.add_argument('-u', '--username', dest='username', help='username to use')
+    parser.add_argument('-d', '--dir', dest='dir',
+            help='output directory for media and one note per file dump')
 
+    parser.add_argument('-u', '--username', dest='username', help='username to
+            use')
 
     args = parser.parse_args()
 
@@ -142,8 +178,18 @@ def main():
     data = cb.fetch_data()
 
     sys.stdout.write("Writing notes to %s\n" %(args.outfile))
-    cb.dump_notes(filename=args.outfile)
-    sys.stdout.write("Backup complete!\n")
+    cb.dump_raw_notes(filename=args.outfile)
+    sys.stdout.write("JSON Backup complete!\n")
+
+    if args.dir:
+        sys.stdout.write("Starting one-note-per-file dump. Output dir: %s"
+                %(args.dir))
+        cb.dump_cooked_notes(directory=args.dir)
+        sys.stdout.write("One-note-per-file dump complete")
+
+        sys.stdout.write("Starting media dump. Output dir: %s/media"
+                %(args.dir))
+
 
 if __name__ == "__main__":
     main()
