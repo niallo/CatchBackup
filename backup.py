@@ -169,7 +169,7 @@ class CatchBackup(object):
 
             attachments = []
             for idx, media in enumerate(note["media"]):
-                src = media["src"]
+                src = "%s?original=true" %(media["src"])
                 filename = "%s/media/%s-%s%s" %(directory, note["id"], idx,
                         get_extension(media["content_type"]))
                 sys.stdout.write("Fetching media for note %s size %d bytes\n"
