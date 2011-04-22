@@ -166,7 +166,7 @@ class CatchBackup(object):
             latitude = ""
             if note.get("location"):
                 longitude = note["location"]["features"][0]["geometry"]["coordinates"][1]
-                longitude = note["location"]["features"][0]["geometry"]["coordinates"][0]
+                latitude = note["location"]["features"][0]["geometry"]["coordinates"][0]
 
             attachments = ""
             s = string.Template(OUTPUT_TEMPLATE)
