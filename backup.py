@@ -189,8 +189,10 @@ class CatchBackup(object):
             l = note.get("text", "").splitlines()
             if l:
                 sample_text = re.sub(r"[^A-Za-z0-9]*", "", l[0])[:32]
+                if sample_text:
+                    sample_text = "%s-" % sample_text
 
-            filename = "%s-%s-%s.txt" %(sample_text, note["id"],
+            filename = "%s%s-%s.txt" %(sample_text, note["id"],
                 note["created_at"].strftime("%Y%m%d-%H%M%S"))
 
             return filename
