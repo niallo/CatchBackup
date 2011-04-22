@@ -16,6 +16,7 @@ import getpass
 import httplib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import string
@@ -153,7 +154,7 @@ class CatchBackup(object):
             sample_text = ""
             l = note.get("text", "").splitlines()
             if l:
-                sample_text = l[0].replace(" ", "").replace("/", "_")[:32]
+                sample_text = re.sub(r"[^A-Za-z0-9]*", "", l[0])[:32]
 
             filename = "%s-%s-%s.txt" %(sample_text, note["id"],
                 note["created_at"].strftime("%Y%m%d-%H%M%S"))
