@@ -1,5 +1,18 @@
 Tool to back up notes and media items from Catch account
 
+usage: backup.py [-h] [-f OUTFILE] [-d DIR] [-u USERNAME]
+
+Backup data from Catch API
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f OUTFILE, --file OUTFILE
+                        JSON data file to write (default: notes.json)
+  -d DIR, --dir DIR     output directory for media and one note per file dump
+  -u USERNAME, --username USERNAME
+                        username to use
+
+
 Example usage:
 
 ./backup.py -d $HOME/catch-backup
