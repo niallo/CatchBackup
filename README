@@ -28,6 +28,18 @@ Fetching media for note 24258985 size 953102 bytes
 Fetching media for note 24058249 size 1276211 bytes
 Fetching media for note 24046985 size 1156698 bytes
 
+Example of on-disk output format (one-file-per-note):
+
+$ ls /ext/catch-backup/
+WhiteChristmas-21716751-20101223-100853.txt
+WhiteChristmas-21716752-20101223-101005.txt
+WhosaystherearentanyexpensiveIri-21818037-20101229-133700.txt
+WhyAIsucksintensereading-23421493-20110305-210153.txt
+WhyChinacouldrulethenewageofgame-23202069-20110225-180049.txt
+Wildboar-21602105-20101216-143235.txt
+Wontonchashuramennosh-21383066-20101204-021739.txt
+Xoomvsnookcolor-23204308-20110225-193819.txt
+
 Example output data for note with attachment:
 
 $ cat /ext/catch-backup/Japaneseboxteapot-23869189-20110321-041308.txt
