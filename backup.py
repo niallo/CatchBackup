@@ -90,8 +90,7 @@ class CatchBackup(object):
 
     def fetch_data(self):
 
-        ''' Fetch the raw unstructured workout data from Catch API. Other
-        methods will parse this into structured  '''
+        ''' Fetch the data from Catch '''
 
         self.conn = httplib.HTTPSConnection(API)
         headers = self._make_basic_auth_header()
