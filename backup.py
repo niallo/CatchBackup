@@ -182,10 +182,6 @@ class CatchBackup(object):
             f.close()
 
 
-
-
-
-
 def main():
     parser = argparse.ArgumentParser(description='Backup data from Catch API')
     parser.add_argument('-f', '--file', dest='outfile',
@@ -213,10 +209,10 @@ def main():
     sys.stdout.write("JSON Backup complete!\n")
 
     if args.dir:
-        sys.stdout.write("Starting one-note-per-file and media dump. Output dir: %s"
+        sys.stdout.write("Starting one-note-per-file and media dump. Output dir: %s\n"
                 %(args.dir))
         cb.dump_cooked_notes_and_media(directory=args.dir)
-        sys.stdout.write("One-note-per-file and media dump complete")
+        sys.stdout.write("One-note-per-file and media dump complete\n")
 
 
 
