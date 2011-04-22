@@ -169,7 +169,8 @@ class CatchBackup(object):
                 "created_at" : note["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "modified_at" : note["modified_at"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "text" : note.get("text", ""),
-                "tags" : note.get("tags", ""),
+                "tags" : " ".join(["#%s" %(tag) for tag in note.get("tags",
+                    [])]),
                 "longitude" : longitude,
                 "latitude" : latitude,
                 "attachments" : attachments }
