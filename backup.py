@@ -19,7 +19,6 @@ import mimetypes
 import os
 import re
 import shutil
-import sqlite3
 import string
 import sys
 import urllib
