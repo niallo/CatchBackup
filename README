@@ -12,7 +12,30 @@ optional arguments:
   -u USERNAME, --username USERNAME
                         username to use
 
+Example run:
 
-Example usage:
+./backup.py -u catchuser -d /ext/catch-backup
+Password:
+Fetching notes...
+Writing notes to notes.json
+JSON Backup complete!
+Starting one-note-per-file and media dump. Output dir: /ext/catch-backup
+Fetching media for note 24627592 size 2487388 bytes
+Fetching media for note 24627592 size 505281 bytes
+Fetching media for note 24627592 size 1186871 bytes
+Fetching media for note 24622035 size 757637 bytes
+Fetching media for note 24258985 size 953102 bytes
+Fetching media for note 24058249 size 1276211 bytes
+Fetching media for note 24046985 size 1156698 bytes
 
-./backup.py -d $HOME/catch-backup
+Example output data for note with attachment:
+
+$ cat /ext/catch-backup/Japaneseboxteapot-23869189-20110321-041308.txt
+Created Date: 2011-03-21T04:13:08.000000Z
+Modified Date: 2011-03-21T04:13:32.000000Z
+Longitude: 37.78280515
+Latitude: -122.43147747
+Tags: 
+Attachments: /ext/catch-backup/media/23869189-0.jpg
+
+Japanese box teapot 
