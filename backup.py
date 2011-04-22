@@ -17,10 +17,22 @@ import httplib
 import json
 import os
 import sqlite3
+import string
 import sys
 import urllib
 
 API = "api.catch.com"
+
+OUTPUT_TEMPLATE = """
+Created Date: $created_at
+Modified Date: $modified_at
+Longitude: $longitude
+Latitude: $latitude
+Tags: $tags
+Attachments: $attachments
+
+$text
+"""
 
 def get_username():
     ''' Read username from terminal '''
@@ -125,33 +137,50 @@ class CatchBackup(object):
         f.write(self.raw_data)
         f.close()
 
-    def dump_cooked_notes(self, directory=None):
+    def dump_cooked_notes_and_media(self, directory=None):
         if not directory:
             raise DirectoryRequired()
         try:
             os.makedirs(directory)
-        except error:
+        except os.error:
             pass
 
         if not self.cooked_data:
             raise NoDataError()
 
-        for note in self.cooked_data:
-            pass
+        for note in self.cooked_data["notes"]:
+            sample_text = ""
+            l = note.get("text", "").splitlines()
+            if l:
+                sample_text = l[0].replace(" ", "").replace("/", "_")
 
-    def dump_media(self, directory=None):
-        if not directory:
-            raise DirectoryRequired()
-        try:
-            os.makedirs(directory)
-        except error:
-            pass
+            filename = "%s-%s-%s.txt" %(sample_text, note["id"],
+                note["created_at"].strftime("%Y%m%d-%H%M%S"))
+            longitude = ""
+            latitude = ""
+            if note.get("location"):
+                longitude = note["location"]["features"][0]["geometry"]["coordinates"][1]
+                longitude = note["location"]["features"][0]["geometry"]["coordinates"][0]
 
-        if not self.cooked_data:
-            raise NoDataError()
+            attachments = ""
+            s = string.Template(OUTPUT_TEMPLATE)
+            f = open("%s/%s" %(directory, filename), "w")
 
-        for not in self.cooked_data:
-            pass
+            subs = {
+                "created_at" : note["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+                "modified_at" : note["modified_at"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+                "text" : note.get("text", ""),
+                "tags" : note.get("tags", ""),
+                "longitude" : longitude,
+                "latitude" : latitude,
+                "attachments" : attachments }
+            data = s.safe_substitute(subs)
+            f.write(data)
+            f.close()
+
+
+
+
 
 
 def main():
@@ -163,8 +192,7 @@ def main():
     parser.add_argument('-d', '--dir', dest='dir',
             help='output directory for media and one note per file dump')
 
-    parser.add_argument('-u', '--username', dest='username', help='username to
-            use')
+    parser.add_argument('-u', '--username', dest='username', help='username to use')
 
     args = parser.parse_args()
 
@@ -182,13 +210,11 @@ def main():
     sys.stdout.write("JSON Backup complete!\n")
 
     if args.dir:
-        sys.stdout.write("Starting one-note-per-file dump. Output dir: %s"
+        sys.stdout.write("Starting one-note-per-file and media dump. Output dir: %s"
                 %(args.dir))
-        cb.dump_cooked_notes(directory=args.dir)
-        sys.stdout.write("One-note-per-file dump complete")
+        cb.dump_cooked_notes_and_media(directory=args.dir)
+        sys.stdout.write("One-note-per-file and media dump complete")
 
-        sys.stdout.write("Starting media dump. Output dir: %s/media"
-                %(args.dir))
 
 
 if __name__ == "__main__":
