@@ -15,6 +15,7 @@ import datetime
 import getpass
 import httplib
 import json
+import mimetypes
 import os
 import re
 import shutil
@@ -154,6 +155,36 @@ class CatchBackup(object):
         if not self.cooked_data:
             raise NoDataError()
 
+        def fetch_attachments(note, directory):
+            try:
+                os.makedirs("%s/media" %(directory))
+            except os.error:
+                pass
+
+            def get_extension(content_type):
+                mimetypes.init()
+                mappings = { 'image/jpeg' : '.jpg' }
+                return mappings.get(content_type,
+                        mimetypes.guess_extension(content_type))
+
+
+            attachments = []
+            for idx, media in enumerate(note["media"]):
+                src = media["src"]
+                filename = "%s/media/%s-%s%s" %(directory, note["id"], idx,
+                        get_extension(media["content_type"]))
+                sys.stdout.write("Fetching media for note %s size %d bytes\n"
+                        %(note["id"], int(media["size"])))
+                uf = urllib.urlopen(src)
+                data = uf.read()
+                uf.close()
+                f = open(filename, "w")
+                f.write(data)
+                f.close()
+                attachments.append(filename)
+
+            return attachments
+
         def make_note_filename(note):
             sample_text = ""
             l = note.get("text", "").splitlines()
@@ -165,14 +196,14 @@ class CatchBackup(object):
 
             return filename
 
-        def render_note_template(note):
+        def render_note_template(note, attachments):
             longitude = ""
             latitude = ""
             if note.get("location"):
                 longitude = note["location"]["features"][0]["geometry"]["coordinates"][1]
                 latitude = note["location"]["features"][0]["geometry"]["coordinates"][0]
 
-            attachments = ""
+            attachments = " ".join(attachments)
             s = string.Template(OUTPUT_TEMPLATE)
 
             subs = {
@@ -189,7 +220,8 @@ class CatchBackup(object):
 
         for note in self.cooked_data["notes"]:
             filename = make_note_filename(note)
-            data = render_note_template(note)
+            attachments = fetch_attachments(note, directory)
+            data = render_note_template(note, attachments)
             f = open("%s/%s" %(directory, filename), "w")
             f.write(data.encode("utf-8"))
             f.close()
