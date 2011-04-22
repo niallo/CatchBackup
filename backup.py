@@ -152,7 +152,7 @@ class CatchBackup(object):
             sample_text = ""
             l = note.get("text", "").splitlines()
             if l:
-                sample_text = l[0].replace(" ", "").replace("/", "_")
+                sample_text = l[0].replace(" ", "").replace("/", "_")[:32]
 
             filename = "%s-%s-%s.txt" %(sample_text, note["id"],
                 note["created_at"].strftime("%Y%m%d-%H%M%S"))
@@ -175,7 +175,7 @@ class CatchBackup(object):
                 "latitude" : latitude,
                 "attachments" : attachments }
             data = s.safe_substitute(subs)
-            f.write(data)
+            f.write(data.encode("utf-8"))
             f.close()
 
 
