@@ -16,6 +16,7 @@ import getpass
 import httplib
 import json
 import os
+import shutil
 import sqlite3
 import string
 import sys
@@ -139,6 +140,7 @@ class CatchBackup(object):
     def dump_cooked_notes_and_media(self, directory=None):
         if not directory:
             raise DirectoryRequired()
+        shutil.rmtree(directory, ignore_errors=True)
         try:
             os.makedirs(directory)
         except os.error:
