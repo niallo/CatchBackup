@@ -50,6 +50,9 @@ def get_password():
     ''' Read password from terminal '''
     while True:
         password = getpass.getpass("Password: ")
+        if "\x03" in password:
+            raise KeyboardInterrupt()
+
         if password:
             break
 
