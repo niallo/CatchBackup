@@ -102,7 +102,7 @@ class CatchBackup(object):
         res = self.conn.getresponse()
 
         if res.status != 200:
-            sys.stderr.write("%d response from server.\n Reason: %s" %(
+            sys.stderr.write("ERROR: %d response from server. Reason: %s\n" %(
                 res.status,
                 res.reason))
             sys.exit(1)
@@ -180,6 +180,7 @@ class CatchBackup(object):
                 "longitude" : longitude,
                 "latitude" : latitude,
                 "attachments" : attachments }
+
             return s.safe_substitute(subs)
 
         for note in self.cooked_data["notes"]:
