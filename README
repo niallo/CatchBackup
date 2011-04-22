@@ -1,1 +1,5 @@
 Tool to back up notes and media items from Catch account
+
+Example usage:
+
+./backup.py -d $HOME/catch-backup
