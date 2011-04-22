@@ -150,7 +150,7 @@ class CatchBackup(object):
         if not self.cooked_data:
             raise NoDataError()
 
-        for note in self.cooked_data["notes"]:
+        def make_note_filename(note):
             sample_text = ""
             l = note.get("text", "").splitlines()
             if l:
@@ -158,6 +158,10 @@ class CatchBackup(object):
 
             filename = "%s-%s-%s.txt" %(sample_text, note["id"],
                 note["created_at"].strftime("%Y%m%d-%H%M%S"))
+
+            return filename
+
+        def render_note_template(note):
             longitude = ""
             latitude = ""
             if note.get("location"):
@@ -166,7 +170,6 @@ class CatchBackup(object):
 
             attachments = ""
             s = string.Template(OUTPUT_TEMPLATE)
-            f = open("%s/%s" %(directory, filename), "w")
 
             subs = {
                 "created_at" : note["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
@@ -177,7 +180,12 @@ class CatchBackup(object):
                 "longitude" : longitude,
                 "latitude" : latitude,
                 "attachments" : attachments }
-            data = s.safe_substitute(subs)
+            return s.safe_substitute(subs)
+
+        for note in self.cooked_data["notes"]:
+            filename = make_note_filename(note)
+            data = render_note_template(note)
+            f = open("%s/%s" %(directory, filename), "w")
             f.write(data.encode("utf-8"))
             f.close()
 
